@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player de Música</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .playlist {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .playlist li {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .playlist li:hover {
+            background-color: #eee;
+        }
+        audio {
+            margin: 20px;
+        }
+        .player-controls {
+            margin-top: 20px;
+        }
+        button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Player de Música</h1>
+    <ul class="playlist" id="playlist">
+        <li data-src="b1.mp3"> Efeito</li>
+        <li data-src="b2.mp3">Música 1</li>
+        <li data-src="b3.mp3">Música 2</li>
+        <li data-src="b4.mp3">Música 3</li>
+        <li data-src="b5.mp3"> Efeito</li>
+        <li data-src="b6.mp3">Música 4</li>
+        <li data-src="b7.mp3">Música 5</li>
+        <li data-src="b8.mp3">Música 6</li>
+    </ul>
+    <audio id="audio" controls>
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+    <div class="player-controls">
+        <button onclick="playPause()">Play/Pause</button>
+        <button onclick="previousTrack()">Anterior</button>
+        <button onclick="nextTrack()">Próximo</button>
+        <button onclick="toggleLoop()">Loop: <span id="loopStatus">Off</span></button>
+    </div>
+
+    <script>
+        const audioElement = document.getElementById('audio');
+        const playlist = document.getElementById('playlist');
+        const loopStatus = document.getElementById('loopStatus');
+        let currentTrackIndex = 0;
+        let loop = false;
+        
+        // Carrega a primeira faixa
+        function loadTrack() {
+            const tracks = playlist.querySelectorAll('li');
+            const currentTrack = tracks[currentTrackIndex];
+            audioElement.src = currentTrack.getAttribute('data-src');
+            audioElement.play();
+        }
+
+        // Play/Pause
+        function playPause() {
+            if (audioElement.paused) {
+                audioElement.play();
+            } else {
+                audioElement.pause();
+            }
+        }
+
+        // Próxima faixa
+        function nextTrack() {
+            const tracks = playlist.querySelectorAll('li');
+            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            loadTrack();
+        }
+
+        // Faixa anterior
+        function previousTrack() {
+            const tracks = playlist.querySelectorAll('li');
+            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+            loadTrack();
+        }
+
+        // Alterna loop
+        function toggleLoop() {
+            loop = !loop;
+            audioElement.loop = loop;
+            loopStatus.textContent = loop ? 'On' : 'Off';
+        }
+
+        // Eventos da playlist
+        playlist.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                const tracks = playlist.querySelectorAll('li');
+                currentTrackIndex = Array.from(tracks).indexOf(e.target);
+                loadTrack();
+            }
+        });
+
+        // Inicializa o player com a primeira música
+        loadTrack();
+    </script>
+</body>
+</html>
